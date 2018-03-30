@@ -24,13 +24,15 @@ public class FamilyPicture: GKEntity {
         }
     }
     
-    public func backToNormal(position: CGPoint) {
+    public func backToNormal(position: CGPoint, completion: (() -> ())? = nil) {
         if let sprite = self.spriteComponent?.node {
             sprite.zPosition = -1
             let rotate = SKAction.rotate(byAngle: CGFloat(Double.pi * 2), duration: 0.5)
             let expand = SKAction.scale(to: 1, duration: 0.5)
             let group = SKAction.group([rotate, expand])
-            sprite.run(group)
+            sprite.run(group){
+                completion?()
+            }
         }
     }
 }

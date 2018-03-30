@@ -21,7 +21,6 @@ public class LivingRoomScene: SKScene, InteractionProtocol{
         self.backgroundLayer = LivingRoomBackground(size: size)
         configurePhysics()
         addLayers()
-        print("completei o init")
     }
     
     public required init?(coder aDecoder: NSCoder) {
@@ -54,7 +53,11 @@ public class LivingRoomScene: SKScene, InteractionProtocol{
     
     public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         if(isFamilyPictureInFront){
-            self.backgroundLayer?.picture?.backToNormal(position: CGPoint(x: (self.size.width)/2, y: (self.size.height) * 0.44))
+            self.backgroundLayer?.picture?.backToNormal(position: CGPoint(x: (self.size.width)/2, y: (self.size.height) * 0.44), completion: {
+                if((UserDefaults.standard.value(forKey: "joyUnits") as! Int) > 4){
+                    self.switchSceneDelegate?.endGame()
+                }
+            })
             self.isFamilyPictureInFront = false
             return
         }
@@ -123,27 +126,40 @@ public class LivingRoomScene: SKScene, InteractionProtocol{
     }
     
     func handleSeeWWDC() {
-        self.backgroundLayer?.television?.switchTv()
         if(!hasSeenWWDC){
             self.hudLayer?.increaseJoyUnitsValue()
             self.hudLayer?.addJoyUnit()
             self.hasSeenWWDC = true
         }
+        self.backgroundLayer?.television?.switchTv(completion: {
+            if((UserDefaults.standard.value(forKey: "joyUnits") as! Int) > 4){
+                self.switchSceneDelegate?.endGame()
+            }
+        })
     }
     
     func handlePetCat() {
-        self.backgroundLayer?.cat?.catMeow()
         if(!self.hasPetCat){
             self.hudLayer?.increaseJoyUnitsValue()
             self.hudLayer?.addJoyUnit()
             self.hasPetCat = true
         }
+        self.backgroundLayer?.cat?.catMeow(completion: {
+            if((UserDefaults.standard.value(forKey: "joyUnits") as! Int) > 4){
+                self.switchSceneDelegate?.endGame()
+            }
+        })
     }
     
     func handleSeePicture() {
         if(isFamilyPictureInFront){
-            self.backgroundLayer?.picture?.backToNormal(position: CGPoint(x: (self.size.width)/2, y: (self.size.height) * 0.44))
+            self.backgroundLayer?.picture?.backToNormal(position: CGPoint(x: (self.size.width)/2, y: (self.size.height) * 0.44), completion: {
+                if((UserDefaults.standard.value(forKey: "joyUnits") as! Int) > 4){
+                    self.switchSceneDelegate?.endGame()
+                }
+            })
             self.isFamilyPictureInFront = false
+            
             return
         }
         self.backgroundLayer?.picture?.expandPhoto()

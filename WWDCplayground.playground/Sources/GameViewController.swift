@@ -6,6 +6,7 @@ public protocol SwitchScenesProtocol {
     func goToBedroom()
     func goToLivingRoom()
     func goOutside()
+    func endGame()
 }
 
 public class GameViewController: SKView, SwitchScenesProtocol {
@@ -14,6 +15,7 @@ public class GameViewController: SKView, SwitchScenesProtocol {
     public var bedroomScene: BedroomScene?
     public var livingRoomScene: LivingRoomScene?
     public var outsideScene: OutsideScene?
+    public var endingScene: EndingScene?
     var backgroundMusic : AVAudioPlayer?
     var hasBeganToPlay = false
     
@@ -33,6 +35,8 @@ public class GameViewController: SKView, SwitchScenesProtocol {
         
         self.outsideScene = OutsideScene(size: self.frame.size)
         self.outsideScene?.switchSceneDelegate = self
+        
+        self.endingScene = EndingScene(size: self.frame.size)
         
         bedroomScene?.scaleMode = .aspectFit
         introScene?.scaleMode = .aspectFit
@@ -68,5 +72,10 @@ public class GameViewController: SKView, SwitchScenesProtocol {
 
     public func goOutside() {
         self.presentScene(self.outsideScene!)
+    }
+    
+    public func endGame() {
+        let transition = SKTransition.crossFade(withDuration: 2)
+        self.presentScene(self.endingScene!, transition: transition)
     }
 }

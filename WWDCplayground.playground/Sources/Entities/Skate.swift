@@ -18,10 +18,12 @@ public class Skate: GKEntity {
         }
     }
     
-    public func show(){
+    public func show(completion: (() -> ())? = nil){
         let show = SKAction.fadeIn(withDuration: 0)
         if let sprite = self.component(ofType: SpriteComponent.self)?.node {
-            sprite.run(show)
+            sprite.run(show){
+                completion?()
+            }
         }
     }
     

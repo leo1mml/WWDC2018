@@ -18,10 +18,12 @@ public class Cat : GKEntity {
         }
     }
     
-    public func catMeow() {
+    public func catMeow(completion: (() -> ())? = nil) {
         if let sprite = self.component(ofType: SpriteComponent.self)?.node{
             let purrNoise = SKAction.playSoundFileNamed("Miau.mp3", waitForCompletion: false)
-            sprite.run(purrNoise)
+            sprite.run(purrNoise) {
+                completion?()
+            }
         }
     }
     

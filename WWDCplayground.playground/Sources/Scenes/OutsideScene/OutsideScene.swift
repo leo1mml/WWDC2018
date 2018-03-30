@@ -36,9 +36,13 @@ public class OutsideScene: SKScene, InteractionProtocol{
     }
     
     func sunset() {
-        self.backgroundLayer?.sun?.goDown()
         self.backgroundLayer?.sky?.orangefy()
         self.backgroundLayer?.clouds?.fade()
+        self.backgroundLayer?.sun?.goDown(completion: {
+            if((UserDefaults.standard.value(forKey: "joyUnits") as! Int) > 4){
+                self.switchSceneDelegate?.endGame()
+            }
+        })
     }
     
     func updateJoyUnits() {
@@ -82,7 +86,7 @@ public class OutsideScene: SKScene, InteractionProtocol{
         if(littleMugX > self.size.width * 0.120 && littleMugX < self.size.width * 0.3327){
             self.hudLayer?.messageLabel.text = "Skate"
         }else if((littleMugX > self.size.width * 0.334 && littleMugX < self.size.width * 0.672) && !self.hasSeenSunset){
-            self.hudLayer?.messageLabel.text = "Wait for the sunrise"
+            self.hudLayer?.messageLabel.text = "Sit and wait for the sunrise"
         }else {
             self.hudLayer?.messageLabel.text = ""
         }
@@ -112,7 +116,11 @@ public class OutsideScene: SKScene, InteractionProtocol{
             self.hudLayer?.addJoyUnit()
         }
         if(self.gameLayer?.littleMug?.isSkating)!{
-            self.backgroundLayer?.skate?.show()
+            self.backgroundLayer?.skate?.show(completion: {
+                if((UserDefaults.standard.value(forKey: "joyUnits") as! Int) > 4){
+                    self.switchSceneDelegate?.endGame()
+                }
+            })
             self.gameLayer?.littleMug?.standStill()
         }else {
             self.backgroundLayer?.skate?.fade()

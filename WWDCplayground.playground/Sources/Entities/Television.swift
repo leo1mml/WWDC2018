@@ -15,7 +15,7 @@ public class Television: GKEntity {
         fatalError("init(coder:) has not been implemented")
     }
     
-    public func switchTv() {
+    public func switchTv(completion: (() -> ())? = nil) {
         if let sprite = self.spriteComponent?.node{
             if self.tvIsOff {
                 let texture = SKTexture(imageNamed: "tv")
@@ -27,5 +27,6 @@ public class Television: GKEntity {
                 self.tvIsOff = true
             }
         }
+        completion?()
     }
 }
